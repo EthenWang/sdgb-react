@@ -2,22 +2,50 @@ import * as React from 'react';
 import { Row, Col, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import { ScoreItem, Player, Team } from '../store';
 import * as label from '../assets/label';
+import { ChangeEvent } from 'react';
 
 interface PostScoreItemProps extends ScoreItem {
   index: number;
   playerList: Player[];
   teamList?: Team[];
-  playerValidateMessage: string;
-  scoreValidateMessage: string;
   displayBreak: boolean;
+  onSelectTeam: (index: number, teamId: number) => void;
+  onSelectPlayer: (index: number, playerId: number) => void;
+  onSelectBreak: (index: number, gamebreak: number) => void;
+  onChangeScore: (index: number, score: number) => void;
 }
 
 class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
-  private get displayTeam(): boolean {
-    return this.props.teamList != null;
-  } 
+  constructor(props: PostScoreItemProps) {
+    super(props);
+    this.onSelectTeam = this.onSelectTeam.bind(this);
+    this.onSelectPlayer = this.onSelectPlayer.bind(this);
+    this.onSelectBreak = this.onSelectBreak.bind(this);
+    this.onChangeScore = this.onChangeScore.bind(this);
+  }
+
+  onSelectTeam(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+    this.props.onSelectTeam(this.props.index, e.target.valueAsNumber);
+  }
+
+  onSelectPlayer(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+    this.props.onSelectPlayer(this.props.index, e.target.valueAsNumber);
+  }
+
+  onSelectBreak(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+    this.props.onSelectBreak(this.props.index, e.target.valueAsNumber);
+  }
+
+  onChangeScore(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+    this.props.onSelectBreak(this.props.index, e.target.valueAsNumber);
+  }
 
   render() {
+    const displayTeam = this.props.teamList != null;
     const teamId = 'team' + this.props.index;
     const playerId = 'player' + this.props.index;
     const scoreId = 'score' + this.props.index;
@@ -26,7 +54,7 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
 
     return (
       <Row>
-        {this.displayTeam &&
+        {displayTeam &&
           <Col md={{size: 3, offset: 1}}>
             <FormGroup>
               <Label for={teamId}>
@@ -37,7 +65,7 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
                 type="select"
                 value={this.props.team ? this.props.team.name : ''}
                 placeholder="Enter text"
-                onChange={this.props.teamChange}
+                onChange={this.onSelectTeam}
               >
                 {this.props.teamList && this.props.teamList.map(
                   (team, index) => <option key={index} value={team.id}>{team.name}</option>
@@ -56,7 +84,7 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
               type="select"
               value={this.props.player.name}
               placeholder="Enter text"
-              onChange={this.props.playerChange}
+              onChange={this.onSelectPlayer}
             >
               {this.props.playerList && this.props.playerList.map(
                 player => <option key={player.id} value={player.id}>{player.name}</option>
@@ -74,7 +102,7 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
               id={scoreId}
               type="number"
               value={this.props.score}
-              onChange={this.props.scoreChange}
+              onChange={this.onChangeScore}
             />
             <FormFeedback>{this.props.scoreValidateMessage}</FormFeedback>
           </FormGroup>
@@ -89,7 +117,7 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
                 id={breakId}
                 type="select"
                 value={this.props.break}
-                onChange={this.props.breakChange}
+                onChange={this.onSelectBreak}
               >
                 {breakOptions.map(time => <option key={time} value={time}>{time}</option>)}
               </Input>
@@ -100,3 +128,5 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
     );
   }
 }
+
+export { PostScoreItem };

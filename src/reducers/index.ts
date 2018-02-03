@@ -1,2 +1,3 @@
-export const testReducer = (state = {}, action = {}) => {
-};
+import { PostScore } from '../reducers/PostScoreReducer';
+
+export { PostScore };

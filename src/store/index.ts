@@ -15,10 +15,17 @@ export interface ScoreItem {
   score: number;
   break: number;
   team?: Team;
+  playerValidateMessage: string;
+  scoreValidateMessage: string;
+}
+
+export interface Rule {
+  displayBreak: boolean;
 }
 
 export interface SdgbStore {
   players: Player[];
-  teams: Team[];
-  postScore: ScoreItem[];
+  teams?: Team[];
+  postScore?: ScoreItem[];
+  rule: Rule;
 }
