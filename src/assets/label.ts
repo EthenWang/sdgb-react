@@ -1,10 +1,11 @@
 export const siteName = '盛殿国标比赛成绩查询';
 export const postScore = '提交成绩';
 export const totalScore = '总分';
-export const selectTeam = '第{1}名队名';
-export const selectPlayer = '第{1}名ID';
-export const enterScore = '第{1}名得分';
-export const selectBreak = '第{1}名断线';
+export const ranki = '第{1}名';
+export const selectTeam = '队名';
+export const selectPlayer = '游戏ID';
+export const enterScore = '得分';
+export const selectBreak = '断线';
 export const highestTotalGamesPlayer = '奋斗王';
 export const highestTotalScorePlayer = '抢分王';
 export const highestGameScorePlayer = '单局最高分';

@@ -5,11 +5,10 @@ import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
-import * as reducers from './reducers';
-import { SdgbStore } from './store';
+import { createStore } from 'redux';
+import reducers from './reducers';
 
-const store = createStore<SdgbStore>(combineReducers(reducers));
+const store = createStore(reducers);
 
 ReactDOM.render(
   <Provider store={store}>

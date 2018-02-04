@@ -54,11 +54,16 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
 
     return (
       <Row>
+        <Col md={{size: 1, offset: 1}}>
+          <h6 className="score-label">
+            {label.ranki.replace('{1}', (this.props.index + 1).toString())}
+          </h6>
+        </Col>
         {displayTeam &&
-          <Col md={{size: 3, offset: 1}}>
+          <Col md={2}>
             <FormGroup>
               <Label for={teamId}>
-                {label.selectTeam.replace('{1}', (this.props.index + 1).toString())}
+                {label.selectTeam}
               </Label> 
               <Input
                 id={teamId}
@@ -77,7 +82,7 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
         <Col md={3}>
           <FormGroup>
             <Label for={playerId}>
-              {label.selectPlayer.replace('{1}', (this.props.index + 1).toString())}
+              {label.selectPlayer}
             </Label>
             <Input
               id={playerId}
@@ -96,7 +101,7 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
         <Col md={this.props.displayBreak ? 1 : 2}>
           <FormGroup>
             <Label for={scoreId}>
-              {label.enterScore.replace('{1}', (this.props.index + 1).toString())}
+              {label.enterScore}
             </Label>
             <Input
               id={scoreId}
@@ -111,7 +116,7 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
           <Col md={1}>
             <FormGroup>
               <Label>
-                {label.selectBreak.replace('{1}', (this.props.index + 1).toString())}
+                {label.selectBreak}
               </Label>   
               <Input
                 id={breakId}
