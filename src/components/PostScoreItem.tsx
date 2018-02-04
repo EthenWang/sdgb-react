@@ -26,22 +26,22 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
 
   onSelectTeam(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    this.props.onSelectTeam(this.props.index, e.target.valueAsNumber);
+    this.props.onSelectTeam(this.props.index, parseInt(e.target.value, undefined));
   }
 
   onSelectPlayer(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    this.props.onSelectPlayer(this.props.index, e.target.valueAsNumber);
+    this.props.onSelectPlayer(this.props.index, parseInt(e.target.value, undefined));
   }
 
   onSelectBreak(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    this.props.onSelectBreak(this.props.index, e.target.valueAsNumber);
+    this.props.onSelectBreak(this.props.index, parseInt(e.target.value, undefined));
   }
 
   onChangeScore(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    this.props.onSelectBreak(this.props.index, e.target.valueAsNumber);
+    this.props.onSelectBreak(this.props.index, parseInt(e.target.value, undefined));
   }
 
   render() {

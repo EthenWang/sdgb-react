@@ -1,4 +1,4 @@
-import { SdgbStore, ScoreItem } from '../store';
+import { SdgbStore } from '../store';
 import * as PostScoreActions from '../actions/PostScoreActions';
 import { POST_SCORE_SELECT_TEAM } from '../actions/PostScoreActions';
 
@@ -35,7 +35,69 @@ const initState = {
       name: 'team_2'
     }
   ],
-  scoreItem: new Array<ScoreItem>(4),
+  scoreItems: [
+    {
+      player: {
+        id: 0,
+        webId: '',
+        name: '',
+        teamId: 0
+      },
+      score: 0,
+      break: 0,
+      team: {
+        id: 0,
+        name: ''
+      },
+      playerValidateMessage: '',
+      scoreValidateMessage: ''
+    }, {
+      player: {
+        id: 0,
+        webId: '',
+        name: '',
+        teamId: 0
+      },
+      score: 0,
+      break: 0,
+      team: {
+        id: 0,
+        name: ''
+      },
+      playerValidateMessage: '',
+      scoreValidateMessage: ''
+    }, {
+      player: {
+        id: 0,
+        webId: '',
+        name: '',
+        teamId: 0
+      },
+      score: 0,
+      break: 0,
+      team: {
+        id: 0,
+        name: ''
+      },
+      playerValidateMessage: '',
+      scoreValidateMessage: ''
+    }, {
+      player: {
+        id: 0,
+        webId: '',
+        name: '',
+        teamId: 0
+      },
+      score: 0,
+      break: 0,
+      team: {
+        id: 0,
+        name: ''
+      },
+      playerValidateMessage: '',
+      scoreValidateMessage: ''
+    }
+  ],
   rule: {
     displayBreak: true
   }

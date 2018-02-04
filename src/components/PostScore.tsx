@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect, Dispatch } from 'react-redux';
+import { Form } from 'reactstrap';
 import { SdgbStore, ScoreItem, Player, Team } from '../store';
 import { PostScoreItem } from './PostScoreItem';
 import * as PostScoreActions from '../actions/PostScoreActions';
 
 interface PostScoreProps {
   displayBreak: boolean;
-  scoreItem: ScoreItem[];
+  scoreItems: ScoreItem[];
   playerList: Player[];
   teamList: Team[];
   selectTeam: (index: number, teamId: number) => PostScoreActions.SelectTeamAction;
@@ -42,27 +43,28 @@ export class PostScore extends React.PureComponent<PostScoreProps> {
     this.props.changeScore(index, score);
   }
 
-  componentWillReceiveProps(nextProps: PostScoreProps) {
-    // this.props = nextProps;
-  }
-
   render() {
-    return [1, 2, 3, 4].map(index => {
-      return (
-        <PostScoreItem 
-          key={index} 
-          index={index}
-          teamList={this.props.teamList}
-          playerList={this.props.playerList}
-          displayBreak={this.props.displayBreak}
-          onSelectTeam={this.onSelectTeam}
-          onSelectPlayer={this.onSelectPlayer}
-          onSelectBreak={this.onSelectBreak}
-          onChangeScore={this.onChangeScore}
-          {...this.props.scoreItem[index - 1]}
-        />
-      );
-    });
+    const { teamList, playerList, displayBreak, scoreItems } = this.props;
+    return (
+      <Form>
+        {[0, 1, 2, 3].map(index => {
+          return (
+            <PostScoreItem 
+              key={index} 
+              index={index}
+              teamList={teamList}
+              playerList={playerList}
+              displayBreak={displayBreak}
+              onSelectTeam={this.onSelectTeam}
+              onSelectPlayer={this.onSelectPlayer}
+              onSelectBreak={this.onSelectBreak}
+              onChangeScore={this.onChangeScore}
+              {...scoreItems[index]}
+            />
+          );
+        })}
+      </Form>
+    );
   }
 }
 
@@ -70,7 +72,7 @@ export function mapStateToProps(state: {PostScore: SdgbStore}) {
   const thisState = state.PostScore;
   return {
     displayBreak: thisState.rule.displayBreak,
-    scoreItem: thisState.postScore,
+    scoreItems: thisState.scoreItems,
     playerList: thisState.players,
     teamList: thisState.teams
   };

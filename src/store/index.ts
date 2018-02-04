@@ -26,6 +26,6 @@ export interface Rule {
 export interface SdgbStore {
   players: Player[];
   teams?: Team[];
-  postScore?: ScoreItem[];
+  scoreItems?: ScoreItem[];
   rule: Rule;
 }
