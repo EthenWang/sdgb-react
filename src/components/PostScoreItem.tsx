@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Row, Col, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import { ScoreItem, Player, Team } from '../store';
 import * as label from '../assets/label';
-import { ChangeEvent } from 'react';
 
 interface PostScoreItemProps extends ScoreItem {
   index: number;
@@ -24,39 +23,45 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
     this.onChangeScore = this.onChangeScore.bind(this);
   }
 
-  onSelectTeam(e: ChangeEvent<HTMLInputElement>) {
+  onSelectTeam(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    this.props.onSelectTeam(this.props.index, parseInt(e.target.value, undefined));
+    const { onSelectTeam, index } = this.props;
+    onSelectTeam(index, parseInt(e.target.value, undefined));
   }
 
-  onSelectPlayer(e: ChangeEvent<HTMLInputElement>) {
+  onSelectPlayer(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    this.props.onSelectPlayer(this.props.index, parseInt(e.target.value, undefined));
+    const { onSelectPlayer, index } = this.props;
+    onSelectPlayer(index, parseInt(e.target.value, undefined));
   }
 
-  onSelectBreak(e: ChangeEvent<HTMLInputElement>) {
+  onSelectBreak(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    this.props.onSelectBreak(this.props.index, parseInt(e.target.value, undefined));
+    const { onSelectBreak, index } = this.props;
+    onSelectBreak(index, parseInt(e.target.value, undefined));
   }
 
-  onChangeScore(e: ChangeEvent<HTMLInputElement>) {
+  onChangeScore(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    this.props.onSelectBreak(this.props.index, parseInt(e.target.value, undefined));
+    const { onChangeScore, index } = this.props;
+    onChangeScore(index, parseInt(e.target.value, undefined));
   }
 
   render() {
-    const displayTeam = this.props.teamList != null;
-    const teamId = 'team' + this.props.index;
-    const playerId = 'player' + this.props.index;
-    const scoreId = 'score' + this.props.index;
-    const breakId = 'break' + this.props.index;
+    const { index, displayBreak, team, player, score, gameBreak, teamList, 
+      playerList, playerValidateMessage, scoreValidateMessage } = this.props;
+    const displayTeam = teamList != null;
+    const teamId = `team${index}`;
+    const playerId = `player${index}`;
+    const scoreId = `score${index}`;
+    const breakId = `break${index}`;
     const breakOptions = [0, 1, 2, 3, 4, 5];
 
     return (
       <Row>
         <Col md={{size: 1, offset: 1}}>
           <h6 className="score-label">
-            {label.ranki.replace('{1}', (this.props.index + 1).toString())}
+            {label.ranki.replace('{1}', (index + 1).toString())}
           </h6>
         </Col>
         {displayTeam &&
@@ -68,12 +73,12 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
               <Input
                 id={teamId}
                 type="select"
-                value={this.props.team ? this.props.team.name : ''}
+                value={team ? team.id : ''}
                 placeholder="Enter text"
                 onChange={this.onSelectTeam}
               >
-                {this.props.teamList && this.props.teamList.map(
-                  (team, index) => <option key={index} value={team.id}>{team.name}</option>
+                {teamList && teamList.map(
+                  (t, i) => <option key={i} value={t.id}>{t.name}</option>
                 )}  
               </Input>
             </FormGroup>
@@ -87,18 +92,18 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
             <Input
               id={playerId}
               type="select"
-              value={this.props.player.name}
+              value={player.id}
               placeholder="Enter text"
               onChange={this.onSelectPlayer}
             >
-              {this.props.playerList && this.props.playerList.map(
-                player => <option key={player.id} value={player.id}>{player.name}</option>
+              {playerList && playerList.map(
+                p => <option key={p.id} value={p.id}>{p.name}</option>
               )}  
             </Input>
-            <FormFeedback>{this.props.playerValidateMessage}</FormFeedback>
+            <FormFeedback>{playerValidateMessage}</FormFeedback>
           </FormGroup>
         </Col>
-        <Col md={this.props.displayBreak ? 1 : 2}>
+        <Col md={displayBreak ? 1 : 2}>
           <FormGroup>
             <Label for={scoreId}>
               {label.enterScore}
@@ -106,10 +111,10 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
             <Input
               id={scoreId}
               type="number"
-              value={this.props.score}
+              value={score}
               onChange={this.onChangeScore}
             />
-            <FormFeedback>{this.props.scoreValidateMessage}</FormFeedback>
+            <FormFeedback>{scoreValidateMessage}</FormFeedback>
           </FormGroup>
         </Col>
         {this.props.displayBreak &&
@@ -121,10 +126,10 @@ class PostScoreItem extends React.PureComponent<PostScoreItemProps> {
               <Input
                 id={breakId}
                 type="select"
-                value={this.props.break}
+                value={gameBreak}
                 onChange={this.onSelectBreak}
               >
-                {breakOptions.map(time => <option key={time} value={time}>{time}</option>)}
+                {breakOptions.map(t => <option key={t} value={t}>{t}</option>)}
               </Input>
             </FormGroup>
           </Col>

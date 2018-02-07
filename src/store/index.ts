@@ -1,6 +1,7 @@
 export interface Team {
   id: number;
   name: string;
+  state?: string;
 }
 
 export interface Player {
@@ -8,13 +9,15 @@ export interface Player {
   webId: string;
   name: string;
   teamId?: number;
+  state?: string;
 }
 
 export interface ScoreItem {
   player: Player;
   score: number;
-  break: number;
+  gameBreak: number;
   team?: Team;
+  playerList: Player[];
   playerValidateMessage: string;
   scoreValidateMessage: string;
 }
@@ -72,11 +75,12 @@ export const initState = {
         teamId: 0
       },
       score: 0,
-      break: 0,
+      gameBreak: 0,
       team: {
         id: 0,
         name: ''
       },
+      playerList: [],
       playerValidateMessage: '',
       scoreValidateMessage: ''
     }, {
@@ -87,11 +91,12 @@ export const initState = {
         teamId: 0
       },
       score: 0,
-      break: 0,
+      gameBreak: 0,
       team: {
         id: 0,
         name: ''
       },
+      playerList: [],
       playerValidateMessage: '',
       scoreValidateMessage: ''
     }, {
@@ -102,11 +107,12 @@ export const initState = {
         teamId: 0
       },
       score: 0,
-      break: 0,
+      gameBreak: 0,
       team: {
         id: 0,
         name: ''
       },
+      playerList: [],
       playerValidateMessage: '',
       scoreValidateMessage: ''
     }, {
@@ -117,11 +123,12 @@ export const initState = {
         teamId: 0
       },
       score: 0,
-      break: 0,
+      gameBreak: 0,
       team: {
         id: 0,
         name: ''
       },
+      playerList: [],
       playerValidateMessage: '',
       scoreValidateMessage: ''
     }

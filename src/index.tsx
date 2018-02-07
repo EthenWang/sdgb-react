@@ -5,14 +5,26 @@ import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import { createBrowserHistory } from 'history';
+import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
+import { Route } from 'react-router';
+import PostStore from './components/PostScore';
+import { Rule } from './components/Rule';
 import reducers from './reducers';
 
-const store = createStore(reducers);
+const history = createBrowserHistory();
+const store = createStore(reducers, applyMiddleware(routerMiddleware(history)));
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ConnectedRouter history={history}>
+      <div>
+        <Route exact={true} path="/" component={App}/>
+        <Route path="/postscore" component={PostStore}/>
+        <Route path="/rule" component={Rule}/>
+      </div>
+    </ConnectedRouter>         
   </Provider>,
   document.getElementById('root') as HTMLElement
 );

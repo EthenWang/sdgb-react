@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 import { SdgbStore } from '../store';
-import { PostScore } from '../reducers/PostScoreReducer';
+import { postScore } from '../reducers/PostScoreReducer';
 
-export default combineReducers<SdgbStore>({ PostScore });
+export default combineReducers<SdgbStore>({ postScore, routerReducer });

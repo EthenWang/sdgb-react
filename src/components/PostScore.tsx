@@ -68,8 +68,8 @@ export class PostScore extends React.PureComponent<PostScoreProps> {
   }
 }
 
-export function mapStateToProps(state: {PostScore: SdgbStore}) {
-  const thisState = state.PostScore;
+export function mapStateToProps(state: { postScore: SdgbStore }) {
+  const thisState = state.postScore;
   return {
     displayBreak: thisState.rule.displayBreak,
     scoreItems: thisState.scoreItems,
