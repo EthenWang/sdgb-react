@@ -9,12 +9,23 @@ import { createStore, applyMiddleware } from 'redux';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import { Route } from 'react-router';
+import createSagaMiddleware from 'redux-saga';
 import PostStore from './components/PostScore';
-import { Rule } from './components/Rule';
+import Rule from './components/Rule';
 import reducers from './reducers';
+import sagas from './sagas';
+import { SdgbStore } from './store';
 
 const history = createBrowserHistory();
-const store = createStore(reducers, applyMiddleware(routerMiddleware(history)));
+const sagaMiddleware = createSagaMiddleware<SdgbStore>();
+const store = createStore(
+  reducers, 
+  applyMiddleware(
+    routerMiddleware(history), 
+    sagaMiddleware
+  )
+);
+sagaMiddleware.run(sagas);
 
 ReactDOM.render(
   <Provider store={store}>

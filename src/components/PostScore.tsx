@@ -2,15 +2,15 @@ import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect, Dispatch } from 'react-redux';
 import { Form } from 'reactstrap';
-import { SdgbStore, ScoreItem, Player, Team } from '../store';
+import { SdgbStore, ScoreItem, PlayerState, TeamState } from '../store';
 import { PostScoreItem } from './PostScoreItem';
 import * as PostScoreActions from '../actions/PostScoreActions';
 
 interface PostScoreProps {
   displayBreak: boolean;
   scoreItems: ScoreItem[];
-  playerList: Player[];
-  teamList: Team[];
+  playerList: PlayerState[];
+  teamList: TeamState[];
   selectTeam: (index: number, teamId: number) => PostScoreActions.SelectTeamAction;
   selectPlayer: (index: number, playerId: number) => PostScoreActions.SelectPlayerAction;
   selectBreak: (index: number, gameBreak: number) => PostScoreActions.SelectBreakAction;
@@ -68,10 +68,10 @@ export class PostScore extends React.PureComponent<PostScoreProps> {
   }
 }
 
-export function mapStateToProps(state: { postScore: SdgbStore }) {
-  const thisState = state.postScore;
+export function mapStateToProps(state: { postScoreReducer: SdgbStore }) {
+  const thisState = state.postScoreReducer;
   return {
-    displayBreak: thisState.rule.displayBreak,
+    displayBreak: thisState.rule.useBreakPunish,
     scoreItems: thisState.scoreItems,
     playerList: thisState.players,
     teamList: thisState.teams

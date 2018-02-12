@@ -1,10 +1,12 @@
-export interface Team {
+import * as _ from 'lodash';
+
+export interface TeamState {
   id: number;
   name: string;
   state?: string;
 }
 
-export interface Player {
+export interface PlayerState {
   id: number;
   webId: string;
   name: string;
@@ -13,127 +15,81 @@ export interface Player {
 }
 
 export interface ScoreItem {
-  player: Player;
+  player: PlayerState;
   score: number;
   gameBreak: number;
-  team?: Team;
-  playerList: Player[];
+  team?: TeamState;
+  playerList: PlayerState[];
   playerValidateMessage: string;
   scoreValidateMessage: string;
 }
 
-export interface Rule {
-  displayBreak: boolean;
+export interface RuleState {
+  globalRanking: boolean;
+  point1: number;
+  point2: number;
+  point3: number;
+  point4: number;
+  useBreakPunish: boolean;
+  punishPoint: number;
+  minPlayerGames: number;
+  maxPlayerGames: number;
+  minTeamGames: number;
+  minTeamPlayers: number;
+  maxTeamPlayers: number;
 }
 
 export interface SdgbStore {
-  players: Player[];
-  teams?: Team[];
+  players: PlayerState[];
+  teams?: TeamState[];
   scoreItems: ScoreItem[];
-  rule: Rule;
+  rule: RuleState;
 }
 
+const generateTestData = () => {
+  let teams = new Array<TeamState>();
+  let players = new Array<PlayerState>();
+
+  _.range(1, 11).map(i => {
+    teams.push({
+      id: i,
+      name: `team_${i}`
+    });
+    _.range(1, 7).map(j => {
+      players.push({
+        id: (i - 1) * 6 + j,
+        webId: `webId_${i}_${j}`,
+        name: `name_${i}_${j}`,
+        teamId: i
+      });
+    });
+  });
+  return { teams, players };
+};
+
 export const initState = {
-  players: [
-    {
-      id: 1,
-      webId: 'webId_1',
-      name: 'name_1',
-      teamId: 1
-    }, {
-      id: 2,
-      webId: 'webId_2',
-      name: 'name_2',
-      teamId: 1
-    }, {
-      id: 3,
-      webId: 'webId_3',
-      name: 'name_3',
-      teamId: 2
-    }, {
-      id: 4,
-      webId: 'webId_4',
-      name: 'name_4',
-      teamId: 2
-    }
-  ],
-  teams: [
-    {
-      id: 1,
-      name: 'team_1'
-    }, {
-      id: 2,
-      name: 'team_2'
-    }
-  ],
-  scoreItems: [
-    {
-      player: {
-        id: 0,
-        webId: '',
-        name: '',
-        teamId: 0
-      },
-      score: 0,
-      gameBreak: 0,
-      team: {
-        id: 0,
-        name: ''
-      },
-      playerList: [],
-      playerValidateMessage: '',
-      scoreValidateMessage: ''
-    }, {
-      player: {
-        id: 0,
-        webId: '',
-        name: '',
-        teamId: 0
-      },
-      score: 0,
-      gameBreak: 0,
-      team: {
-        id: 0,
-        name: ''
-      },
-      playerList: [],
-      playerValidateMessage: '',
-      scoreValidateMessage: ''
-    }, {
-      player: {
-        id: 0,
-        webId: '',
-        name: '',
-        teamId: 0
-      },
-      score: 0,
-      gameBreak: 0,
-      team: {
-        id: 0,
-        name: ''
-      },
-      playerList: [],
-      playerValidateMessage: '',
-      scoreValidateMessage: ''
-    }, {
-      player: {
-        id: 0,
-        webId: '',
-        name: '',
-        teamId: 0
-      },
-      score: 0,
-      gameBreak: 0,
-      team: {
-        id: 0,
-        name: ''
-      },
-      playerList: [],
-      playerValidateMessage: '',
-      scoreValidateMessage: ''
-    }
-  ],
+  ...generateTestData(),
+  scoreItems: _.range(0, 4).map(index => ({
+    player: {} as PlayerState,
+    score: 0,
+    gameBreak: 0,
+    team: {} as TeamState,
+    playerList: [],
+    playerValidateMessage: '',
+    scoreValidateMessage: ''
+  })),
   rule: {
-    displayBreak: true
+    useBreakPunish: true,
+    globalRanking: false,
+    point1: 0,
+    point2: 0,
+    point3: 0,
+    point4: 0,
+    punishPoint: 0,
+    minPlayerGames: 0,
+    maxPlayerGames: 0,
+    minTeamGames: 0,
+    minTeamPlayers: 0,
+    maxTeamPlayers: 0,
   }
 };

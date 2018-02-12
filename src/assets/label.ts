@@ -20,7 +20,6 @@ export const matchType = '比赛类型';
 export const teamMatch = '团体赛';
 export const individualMatch = '个人赛';
 export const breakPunish = '断线罚分';
-export const punishPoint = '断线罚分';
 export const globalRanking = '全场积分';
 export const minTeamPlayers = '团队最低人数';
 export const maxTeamPlayers = '团队最高人数';

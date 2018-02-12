@@ -1,165 +1,35 @@
 import * as React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect, Dispatch } from 'react-redux';
 import { Form, FormGroup, InputGroup, InputGroupAddon, Input, Label } from 'reactstrap';
 import * as label from '../assets/label';
-
-interface GamePointState {
-  point: number;
-  disabled: boolean;
-}
-
-interface GamePointProps extends GamePointState {
-  index: number;
-  onPointChange: (index: number, point: number) => void;
-  onInitComplete: (gp: GamePoint) => void;
-}
-
-class GamePoint extends React.Component<GamePointProps, GamePointState> {
-  constructor(props: GamePointProps) {
-    super(props);
-    this.state = props;
-  }
-
-  onPointChange = (e: React.FormEvent<HTMLInputElement>) => {
-    let obj = e.target as HTMLInputElement;
-    let point = parseInt(obj.value, undefined);
-    this.setState({
-      point: point
-    });
-    let callBack = this.props.onPointChange;
-    if (callBack != null) {
-      callBack(this.props.index, point);
-    }
-  }
-
-  componentDidMount() {
-    let callBack = this.props.onInitComplete;
-    if (callBack != null) {
-      callBack(this);
-    }
-  }
-
-  render() {
-    return (
-      <FormGroup>
-        <Label>
-          {(label.enterScore as string).replace('{1}', (this.props.index + 1).toString())}
-        </Label>
-        <Input
-          type="number"
-          value={this.state.point}
-          placeholder={(label.enterScore as string).replace('{1}', (this.props.index + 1).toString())}
-          onChange={this.onPointChange}
-          disabled={this.state.disabled}
-        />
-      </FormGroup>
-    );
-  }
-}
-
-interface RuleState {
-  breakPunish?: boolean;
-  punishPoint?: number;
-  globalRanking?: boolean;
-  minPlayerGames?: number;
-  maxPlayerGames?: number;
-  minTeamGames?: number;
-  minTeamPlayers?: number;
-  maxTeamPlayers?: number;
-}
+import { RuleState, SdgbStore } from '../store';
+import { RuleAction, RuleSetBooleanActionHandler, RuleSetNumberActionHandler, 
+  setBoolean, setNumber } from '../actions/RuleActions';
 
 interface RuleProps extends RuleState {
+  setBoolean: RuleSetBooleanActionHandler;
+  setNumber: RuleSetNumberActionHandler;
 }
 
-class Rule extends React.Component<RuleProps, RuleState> {
-  private readonly defaultPunish = 50;
-
-  private defaultPoints = [4, 2, 1, 0];
-
-  private points = [4, 2, 1, 0];
-
-  private pointsControl = new Array<GamePoint>(4);
-
-  constructor(props: RuleProps) {
-    super(props);
-    this.state = props;
-  }
-
-  inputChange = (e: React.FormEvent<HTMLInputElement>, fldName: string) => {
+class Rule extends React.PureComponent<RuleProps> {
+  inputChange = (e: React.ChangeEvent<HTMLInputElement>, fldName: string) => {
     let obj = e.target as HTMLInputElement;
-
     switch (fldName) {
       case 'globalRanking':
-        this.setState({
-          globalRanking: obj.checked          
-        });
-        if (obj.checked) {
-          this.pointsControl.forEach((p) => {
-            p.setState({
-              point: 0,
-              disabled: true
-            });
-          });
-        } else {
-          this.pointsControl.forEach((p) => {
-            p.setState({
-              point: this.defaultPoints[p.props.index],
-              disabled: false
-            });
-          });
-        }
-        break;
-      case 'minPlayerGames':
-        this.setState({
-          minPlayerGames: parseInt(obj.value, undefined)
-        });
-        break;
-      case 'minPlayerGames':
-        this.setState({
-          maxPlayerGames: parseInt(obj.value, undefined)
-        });
-        break;
-      case 'minTeamGames':
-        this.setState({
-          minTeamGames: parseInt(obj.value, undefined)
-        });
-        break;
-      case 'minTeamPlayers':
-        this.setState({
-          minTeamPlayers: parseInt(obj.value, undefined)
-        });
-        break; 
-      case 'maxTeamPlayers':
-        this.setState({
-          maxTeamPlayers: parseInt(obj.value, undefined)
-        });
+      case 'useBreakPunish':
+        this.props.setBoolean(fldName, obj.checked);
         break;
       default:
+        this.props.setNumber(fldName, obj.valueAsNumber);
         break;
     }
-  }
-
-  checkboxChange = (checked: boolean, fldName: string) => {
-    switch (fldName) {
-      case 'breakPunish':        
-        this.setState({
-          breakPunish: checked,
-          punishPoint: checked ? this.defaultPunish : 0
-        });
-        break;
-      default:
-        break;
-    }
-  }
-
-  onPointChange = (index: number, point: number) => {
-    this.points[index] = point;
-  } 
-
-  pointInitComplete = (gp: GamePoint) => {
-    this.pointsControl[gp.props.index] = gp;
   }
 
   render() {
+    const { globalRanking, minPlayerGames, maxPlayerGames, minTeamPlayers,
+      maxTeamPlayers, minTeamGames, useBreakPunish, punishPoint } = this.props;
+    const points = [this.props.point1, this.props.point2, this.props.point3, this.props.point4];
     return (
       <Form>
         <h1>{label.ruleSetting}</h1>
@@ -167,21 +37,25 @@ class Rule extends React.Component<RuleProps, RuleState> {
           <Label>
             <Input 
               type="checkbox" 
-              checked={this.state.globalRanking || false}
+              checked={globalRanking}
               onChange={e => this.inputChange(e, 'globalRanking')} 
             />{' '}
             {label.globalRanking}             
           </Label>
         </FormGroup>
-        {this.defaultPoints.map((point, index) => 
-          <GamePoint 
-            key={index} 
-            index={index} 
-            point={point} 
-            disabled={this.state.globalRanking || false} 
-            onPointChange={this.onPointChange}
-            onInitComplete={this.pointInitComplete}
-          />
+        {points.map((point, index) => 
+          <FormGroup key={index}>
+            <Label>
+              {(label.enterScore as string).replace('{1}', (index + 1).toString())}
+            </Label>
+            <Input
+              type="number"
+              value={point}
+              placeholder={(label.enterScore as string).replace('{1}', (index + 1).toString())}
+              onChange={e => this.inputChange(e, `point${index + 1}`)}
+              disabled={globalRanking} 
+            />
+          </FormGroup>
         )}
         <FormGroup>
           <Label>
@@ -189,7 +63,7 @@ class Rule extends React.Component<RuleProps, RuleState> {
           </Label>
           <Input
             type="number"
-            value={this.state.minPlayerGames || 24}
+            value={minPlayerGames}
             placeholder={label.minPlayerGames}
             onChange={e => this.inputChange(e, 'minPlayerGames')}
           />
@@ -200,7 +74,7 @@ class Rule extends React.Component<RuleProps, RuleState> {
           </Label>
           <Input
             type="number"
-            value={this.state.maxPlayerGames || 48}
+            value={maxPlayerGames}
             placeholder={label.maxPlayerGames}
             onChange={e => this.inputChange(e, 'maxPlayerGames')}
           />
@@ -211,7 +85,7 @@ class Rule extends React.Component<RuleProps, RuleState> {
           </Label>
           <Input
             type="number"
-            value={this.state.minTeamPlayers || 4}
+            value={minTeamPlayers}
             placeholder={label.minTeamPlayers}
             onChange={e => this.inputChange(e, 'minTeamPlayers')}
           />
@@ -222,7 +96,7 @@ class Rule extends React.Component<RuleProps, RuleState> {
           </Label>
           <Input
             type="number"
-            value={this.state.maxTeamPlayers || 6}
+            value={maxTeamPlayers}
             placeholder={label.maxTeamPlayers}
             onChange={e => this.inputChange(e, 'maxTeamPlayers')}
           />
@@ -233,7 +107,7 @@ class Rule extends React.Component<RuleProps, RuleState> {
           </Label>
           <Input
             type="number"
-            value={this.state.minTeamGames || 120}
+            value={minTeamGames}
             placeholder={label.minTeamGames}
             onChange={e => this.inputChange(e, 'minTeamGames')}
           />
@@ -241,14 +115,40 @@ class Rule extends React.Component<RuleProps, RuleState> {
         <InputGroup>
           <InputGroupAddon className="input-group-prepend">
             <div className="input-group-text">
-              <Input type="checkbox" aria-label="Checkbox for following text input" />
+              <Input 
+                type="checkbox" 
+                checked={useBreakPunish}
+                onChange={e => this.inputChange(e, 'useBreakPunish')}
+              />{` ${label.breakPunish}`}
             </div>
           </InputGroupAddon>
-          <Input placeholder="Check it out" />
+          <Input 
+            type="number"
+            value={punishPoint}
+            disabled={useBreakPunish} 
+            onChange={e => this.inputChange(e, 'punishPoint')}
+          />
         </InputGroup>
       </Form>
     );
   }
 }
 
-export { Rule, RuleProps };
+export function mapStateToProps(state: { ruleReducer: SdgbStore }) {
+  const thisState = state.ruleReducer;
+  return {
+    ...thisState.rule
+  };
+}
+
+export function mapDispatchToProps(dispatch: Dispatch<RuleAction>) {
+  return bindActionCreators(
+    { 
+      setNumber, 
+      setBoolean
+    }, 
+    dispatch
+  );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Rule);

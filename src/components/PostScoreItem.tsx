@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Row, Col, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
-import { ScoreItem, Player, Team } from '../store';
+import { ScoreItem, PlayerState, TeamState } from '../store';
 import * as label from '../assets/label';
 
 interface PostScoreItemProps extends ScoreItem {
   index: number;
-  playerList: Player[];
-  teamList?: Team[];
+  playerList: PlayerState[];
+  teamList?: TeamState[];
   displayBreak: boolean;
   onSelectTeam: (index: number, teamId: number) => void;
   onSelectPlayer: (index: number, playerId: number) => void;

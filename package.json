@@ -9,6 +9,7 @@
     "@types/react-router": "^4.0.21",
     "@types/react-router-redux": "^5.0.11",
     "@types/reactstrap": "^5.0.12",
+    "@types/redux-saga": "^0.10.5",
     "bootstrap": "^4.0.0",
     "history": "^4.7.2",
     "lodash": "^4.17.5",
@@ -21,7 +22,8 @@
     "react-scripts-ts": "2.13.0",
     "react-transition-group": "^2.2.1",
     "reactstrap": "^5.0.0-alpha.4",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",
